@@ -15,7 +15,7 @@ def exponential_weights(payoff_matrix, epsilon, low, h, n, m, step):
         sorted_bids = np.sort(bids)
         v_1 = sorted_bids[-1]
         v_2 = sorted_bids[-2]
-        print('bids', bids)
+        # print('bids', bids)
 
         # (2) UPDATE REVENUE FOR EACH RESERVE PRICE IN PAYOFF MATRIX
         for reserve_price, val in payoff_matrix.items():
@@ -100,39 +100,93 @@ def generate_action_space(low, high, step):
     for j in np.arange(low, high+step, step):
         action_space[j] = []
 
-    print('action space', action_space)
+    # print('action space', action_space)
     return action_space
 
 
 if __name__ == "__main__":
-    print('i like the view')
-    print('you do?')
-    print('youre my best view')
-    print('meh!')
+    # print('i like the view')
+    # print('you do?')
+    # print('youre my best view')
+    # print('meh!')
+
+    # Types of variations:
+    # change # of bidders (Var 1-3) and (Var 5-7)
+    # change distribution (Var 1 v Var 5) & (Var 2 v Var 6) & (Var 3 v Var 7)
+
+    # VARIATION 1
+    # m = 2, low = 0, high = 1, step = 0.01
+    # expected revenue 0.3876379136150263
+
+    # VARIATION 2
+    # m = 5, low = 0, high = 1, step = 0.01
+    # expected revenue 0.6467471016420894
+
+    # VARIATION 3
+    # m = 10, low = 0, high = 1, step = 0.01
+    # expected revenue 0.8097127326532509
+
+    # VARIATION 4
+    # m = 2, low = 0, high = 1, step = 0.1
+    # expected revenue 0.3863233558628308
+
+    # VARIATION 5
+    # m = 2, low = 0, high = 5, step = 0.01
+    # expected revenue 1.9616346949847119
+
+    # VARIATION 6
+    # m = 5, low = 0, high = 5, step = 0.01
+    # expected revenue 3.3231249859200003
+
+    # VARIATION 7
+    # m = 10, low = 0, high = 5, step = 0.01
+    # expected revenue 4.080585341263793
+
 
     ## experiment 1
     # bidders drawn from uniforma distribution of U[0,1]
     # action space: discretize reserve price from 0,1 with step size 100
     low = 0
-    high = 1
-    step = 0.01
+    high = 5
+    step = 0.1
     n = 1000
-    m = 2
+    m = 10
+    epoch = 100
 
     payoff_matrix = generate_action_space(low, high, step)
 
     epsilon = theo_opt_epsilon(len(payoff_matrix), n)
 
     # print(epsilon)
-  
+    last_reserve_chosen = []
+    
+    print("VARAITION 7")
+
     avg_regret = []
-    # for i in range(100):
-    actions_chosen, payoff_matrix, average_revenue = exponential_weights(payoff_matrix, epsilon, low, high, n, m, step)
+    for i in range(1):
+        actions_chosen, payoff_matrix, average_revenue = exponential_weights(payoff_matrix, epsilon, low, high, n, m, step)
     # regret = calculate_regret(test_data, total_payoff)
     # avg_regret.append(regret)
-    print('actions chosen', actions_chosen)
-    print('expected revenue', average_revenue)
+        # print('actions chosen', actions_chosen)
+        last_reserve_chosen.append(actions_chosen[-1])
+        print('expected revenue', average_revenue)
     # print('payoff matrix', payoff_matrix)
 
-    # print('theo payoff', np.average(total_payoff))
-    # print("THEO", np.average(avg_regret))
+    # RESERVE VS ROUND
+    # show actions over 1 simulation
+
+    plt.figure(1)
+    plt.plot(np.arange(n), actions_chosen)
+    plt.title("Reserve Price Chosen Each Round with 10 Bidders")
+    plt.ylabel("reserve price")
+    plt.xlabel("round")
+    plt.savefig('Part1_reserve_vs_round_VAR7.png')
+
+    # FINAL RESERVE VS EPOCH
+    # show last action over 100 simulation
+    # plt.figure(2)
+    # plt.plot(np.arange(100), last_reserve_chosen)
+    # plt.title("Converged Reserve Price Chosen Over 100 Epochs")
+    # plt.ylabel("reserve price")
+    # plt.xlabel("epoch")
+    # plt.savefig('Part1_reserve_vs_epoch.png')
