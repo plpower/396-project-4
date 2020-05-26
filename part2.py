@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 def exponential_weights(payoff_matrix, epsilon, low, h, n, m, step):
     total_revenue = 0
     actions_chosen = []
+    all_revenues = []
 
     for r in range(n):
         # (1) GENERATE M BIDS
@@ -19,7 +20,7 @@ def exponential_weights(payoff_matrix, epsilon, low, h, n, m, step):
 
         # (2) UPDATE REVENUE FOR EACH RESERVE PRICE IN PAYOFF MATRIX
         for reserve_price, val in payoff_matrix.items():
-            if reserve_price > v_1 + v_2:
+            if 1 > v_1 + v_2:
                 val.append(0)
             else:
                 val.append(1)
@@ -34,11 +35,14 @@ def exponential_weights(payoff_matrix, epsilon, low, h, n, m, step):
         else:
             action_chosen = np.random.choice(round_action, p=probabilities)
         actions_chosen.append(action_chosen)
-        round_revenue = payoff_matrix[action_chosen][r]
+        print(payoff_matrix)
+        print(action_chosen)
+        round_revenue = payoff_matrix[int(action_chosen)][r]
         total_revenue += round_revenue
+        all_revenues.append(total_revenue)
 
     average_revenue = total_revenue/n
-    return actions_chosen, payoff_matrix, average_revenue
+    return actions_chosen, payoff_matrix, average_revenue, all_revenues
 
 
 def get_probabilities(r, e, h, test_data, low, step):
@@ -104,15 +108,16 @@ if __name__ == "__main__":
 
     ## experiment 1
     # bidders drawn from uniforma distribution of U[0,1]
-    # action space: discretize reserve price from 0,1 with step size 100
+    # action space: discretize reserve price from 0,1 (introdue or dont)
     low = 0
     high = 1
-    step = 0.1
+    step = 1
     n = 1000
     m = 2
     epoch = 100
 
-    payoff_matrix = generate_action_space(low, high, step)
+    payoff_matrix = generate_action_space(0, 1, 1)
+    print(payoff_matrix)
 
     epsilon = theo_opt_epsilon(len(payoff_matrix), n)
 
@@ -121,11 +126,18 @@ if __name__ == "__main__":
 
     avg_regret = []
     for i in range(1):
-        actions_chosen, payoff_matrix, average_revenue = exponential_weights(
+        actions_chosen, payoff_matrix, average_revenue, all_revenues = exponential_weights(
             payoff_matrix, epsilon, low, high, n, m, step)
     # regret = calculate_regret(test_data, total_payoff)
     # avg_regret.append(regret)
         print('actions chosen', actions_chosen)
         last_reserve_chosen.append(actions_chosen[-1])
         print('expected revenue', average_revenue)
+    
+    plt.figure(1)
+    plt.plot(np.arange(n), all_revenues)
+    plt.title("Revenue from Selling Intro at Each Round with 2 Bidders")
+    plt.ylabel("revenue")
+    plt.xlabel("round")
+    plt.savefig('Part2_revenue_vs_round_VAR1.png')
 
