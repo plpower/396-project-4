@@ -63,9 +63,6 @@ def run_it():
 
     expected_rev = total_rev / m
     print("EXPECTED REV", expected_rev)
-    
-
-
     test_bids = generate_bids(high, m)
 
     for i in range(m):
@@ -77,7 +74,6 @@ def run_it():
     
     predictions, test_revenue = nearest_neighbor(test_bids, train_bids, train_labels, m)
     test_rev = test_revenue / m
-    print("TEST REV", test_rev)
     
     accuracy = 0
     correct_labels_x = []
@@ -117,9 +113,6 @@ if __name__ == "__main__":
     plt.xlabel("simulation number")
     plt.savefig('Part3_REVS.png')
 
-    print(np.mean(er))
-    print(np.mean(tr))
-    print(np.mean(a))
     high = 1
     m = 100
 
@@ -137,10 +130,6 @@ if __name__ == "__main__":
             train_labels.append(0)
 
     expected_rev = total_rev / m
-    print("EXPECTED REV", expected_rev)
-    
-
-
     test_bids = generate_bids(high, m)
 
     for i in range(m):
@@ -152,8 +141,7 @@ if __name__ == "__main__":
     
     predictions, test_revenue = nearest_neighbor(test_bids, train_bids, train_labels, m)
     test_rev = test_revenue / m
-    print("TEST REV", test_rev)
-    
+
     accuracy = 0
     correct_labels_x = []
     correct_labels_y = []
