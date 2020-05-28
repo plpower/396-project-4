@@ -138,7 +138,6 @@ if __name__ == "__main__":
         else:
             test_labels.append(0)
 
-    
     predictions, test_revenue = nearest_neighbor(test_bids, train_bids, train_labels, m)
     test_rev = test_revenue / m
 
