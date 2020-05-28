@@ -35,15 +35,12 @@ def exponential_weights(payoff_matrix, epsilon, low, h, n, m, step):
         else:
             action_chosen = np.random.choice(round_action, p=probabilities)
         actions_chosen.append(action_chosen)
-        print(payoff_matrix)
-        print(action_chosen)
         round_revenue = payoff_matrix[int(action_chosen)][r]
         total_revenue += round_revenue
         all_revenues.append(total_revenue)
 
     average_revenue = total_revenue/n
     return actions_chosen, payoff_matrix, average_revenue, all_revenues
-
 
 def get_probabilities(r, e, h, test_data, low, step):
     hindsight_payoffs = []
@@ -78,11 +75,9 @@ def theo_opt_epsilon(k, n):
     epsilon = math.sqrt(np.log(k)/n)
     return epsilon
 
-
 def generate_bids(low, high, m):
     ### generate m bids drawn from uniform distribution
     return np.random.uniform(low, high, m)
-
 
 def generate_action_space(low, high, step):
     # start with the example of our bid of 45 with a given value of 50
@@ -97,14 +92,11 @@ def generate_action_space(low, high, step):
     # print('action space', action_space)
     return action_space
 
-
 if __name__ == "__main__":
     # print('i like the view')
     # print('you do?')
     # print('youre my best view')
     # print('meh!')
-
-    # Types of variations:
 
     ## experiment 1
     # bidders drawn from uniforma distribution of U[0,1]
@@ -117,13 +109,8 @@ if __name__ == "__main__":
     epoch = 100
 
     payoff_matrix = generate_action_space(0, 1, 1)
-    print(payoff_matrix)
-
     epsilon = theo_opt_epsilon(len(payoff_matrix), n)
-
-    # print(epsilon)
     last_reserve_chosen = []
-
     avg_regret = []
     for i in range(1):
         actions_chosen, payoff_matrix, average_revenue, all_revenues = exponential_weights(
